@@ -66,7 +66,7 @@ class MovieSection extends Component {
             </Col>
           )}
           {isError && (
-            <Col>
+            <Col className="d-flex justify-content-center">
               <Alert variant="danger">Errore nel recupero dei film!</Alert>
             </Col>
           )}

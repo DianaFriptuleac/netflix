@@ -60,3 +60,12 @@
     text-align: center;
   }
 }
+.center-icon{
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
+}
+.center-icon:hover{
+  transform: scale(1.05); 
+  color: #ffffff;
+  text-shadow: 0px 0px 10px rgba(250, 249, 249, 0.8);
+}
