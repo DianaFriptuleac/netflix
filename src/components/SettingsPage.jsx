@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 
-class AccountPage extends Component {
+class SettingsPage extends Component {
   render() {
     return (
-      <Container className="my-5">
-        <h1>Account</h1>
+      <Container fluid className="bg-light">
+        <Container className="my-5">
+        <h1 className="mt-5">Account</h1>
         <hr />
         <Row className="align-items-center">
           <Col sm={12} md={6} lg={3}>
@@ -94,9 +95,10 @@ class AccountPage extends Component {
             <p>Add profile email</p>
           </Col>
         </Row>
+        </Container>
       </Container>
     );
   }
 }
 
-export default AccountPage;
+export default SettingsPage;

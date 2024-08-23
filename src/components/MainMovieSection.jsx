@@ -3,7 +3,7 @@ const MainMovieSection = () =>{
     return (
         <div className='bg-dark'>
         <Container fluid>
-        <Row className="mb-3 align-items-center mx-2">
+        <Row className="my-3 align-items-center mx-2">
        
               <Col xs='auto'>
                 <h2 className='text-light'>TV Shows</h2>
