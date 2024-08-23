@@ -28,7 +28,7 @@ class MovieSection extends Component {
       .then((data) => {
         console.log("MY MOVIES", data);
         this.setState({
-          mymovies: data.Search || [], // Imposta films con l'array "Search" o un array vuoto se non esiste
+          mymovies: data.Search || [], // Imposta mymovies con l'array "Search" o un array vuoto se non esiste
           isLoading: false,
         });
       })
@@ -81,6 +81,7 @@ class MovieSection extends Component {
               </Col>
             ))}
         </Row>
+   
       </Container>
     );
   }
