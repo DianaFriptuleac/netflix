@@ -2,12 +2,10 @@ import { Navbar, Container, Nav } from 'react-bootstrap'
 
 const CustomNavbar = function () {
   return (
-    <Navbar collapseOnSelect expand="md" bg="dark" data-bs-theme="dark">
+    <Navbar collapseOnSelect expand="md" bg="drk" data-bs-theme="dark">
       <Container fluid>
         <Navbar.Brand href="#home">
-          <a className="navbar-brand" href="#">
             <img src="/assets/logo.png" style={{ width: '100px', height: '55px' }} alt="Logo" />
-          </a>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">

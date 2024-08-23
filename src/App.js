@@ -3,6 +3,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import './App.css';
 import CustomNavbar from './components/CustomNavbar'
 import MyFooter from './components/MyFooter'
+import { Container } from 'react-bootstrap';
+import MovieSection from './components/MovieSection';
 
 
 function App() {
@@ -11,8 +13,12 @@ function App() {
       <header>
       <CustomNavbar />
       </header>
-      <main>
-
+      <main className='bg-dark'>
+      <Container fluid>
+      <MovieSection saga="Harry Potter" />
+      <MovieSection saga="Lord of the Rings" />
+      <MovieSection saga="Star Wars" />
+    </Container>
       </main>
       <footer>
         <MyFooter/>
