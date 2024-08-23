@@ -7,7 +7,7 @@ import MovieSection from './components/MovieSection';
 import MainMovieSection from './components/MainMovieSection';
 import SettingsPage from './components/SettingsPage'; //SettingsPage component (statico!!)
 import ProfilePage from './components/ProfilePage';  //Prodile component
-//!!!!!!!!!!!per vedere sia SettingsPage che ProfilePage commentare sia MovieSectio(galleria) che MainMovieSectio (la parte sopra la galleria dei film)
+//!!!!!!!!!!!per vedere sia SettingsPage che ProfilePage commentare sia MovieSection (galleria) che MainMovieSection (la parte sopra la galleria dei film)
 
 
 
@@ -27,7 +27,7 @@ function App() {
       <MovieSection saga="Lord of the Rings" />
       <MovieSection saga="Star Wars" />
       <MovieSection saga="Fast" />
-      <MovieSection saga="James Bond" /> 
+      <MovieSection saga="Disney" /> 
    
    </main>
       <footer>

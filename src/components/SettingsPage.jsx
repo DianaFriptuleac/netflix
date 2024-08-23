@@ -6,7 +6,7 @@ class SettingsPage extends Component {
     return (
       <Container fluid className="bg-light">
         <Container className="my-5">
-        <h1 className="mt-5">Account</h1>
+        <h1 className="pt-3">Account</h1>
         <hr />
         <Row className="align-items-center">
           <Col sm={12} md={6} lg={3}>
