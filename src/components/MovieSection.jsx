@@ -53,7 +53,7 @@ class MovieSection extends Component {
     const { mymovies, isLoading, isError, movieSelected } = this.state;
 
     return (
-      <Container className="my-4">
+      <Container className="my-5">
         <Row className="mb-3">
           <Col>
             <h4 className="text-light">{this.props.saga}</h4>

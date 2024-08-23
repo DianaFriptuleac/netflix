@@ -2,8 +2,8 @@ import { Col, Container, Row, Button } from "react-bootstrap"
 
 const MyFooter = () => {
   return (
-    <Container fluid className="bg-dark">
-      <Row className="bg-dark justify-content-center align-items-center g-5">
+    <Container fluid >
+      <Row className="bg-black justify-content-center align-items-center g-5">
         <Col xs={12} md={6} lg={3} className="text-secondary">
           <div className="media-icon mb-3">
             <i className="bi bi-facebook footer-icon me-2"></i>

@@ -1,7 +1,7 @@
 import { Container, Row, Col, Dropdown } from "react-bootstrap"
 const MainMovieSection = () =>{
     return (
-        <div className='bg-dark'>
+        <div className='bg-black'>
         <Container fluid>
         <Row className="my-3 align-items-center mx-2">
        
