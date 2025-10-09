@@ -1,6 +1,15 @@
 import React, { Component } from "react";
-import { Col, Container, Row, Spinner, Alert } from "react-bootstrap";
-import SingleMovie from "./SingleMovie";  // Importiamo il nuovo componente
+import { Col, Container, Row, Spinner, Alert, Carousel } from "react-bootstrap";
+import SingleMovie from "./SingleMovie"; // Importiamo il nuovo componente
+
+const API_KEY = process.env.REACT_APP_OMDB_API_KEY;
+const PAGE_SIZE = 6;
+
+const reduceArray = (arr, size) =>
+  arr.reduce(
+    (acc, _, i) => (i % size ? acc : [...acc, arr.slice(i, i + size)]),
+    []
+  );
 
 class MovieSection extends Component {
   state = {
@@ -15,22 +24,41 @@ class MovieSection extends Component {
   }
 
   fetchAllMovies = () => {
-    fetch(
-      `http://www.omdbapi.com/?s=${this.props.saga}&apikey=80031566`
-    )
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("LA CHIAMATA NON È ANDATA A BUON FINE!");
-        }
-      })
-      .then((data) => {
-        console.log("MY MOVIES", data);
-        this.setState({
-          mymovies: data.Search || [], // Imposta mymovies con l'array "Search" o un array vuoto se non esiste
-          isLoading: false,
+    const MAX_PAGES = 3;
+    const allMovies = [];
+
+    const fetchPage = (page) => {
+      return fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(this.props.saga)}&page=${page}&apikey=${API_KEY}`)
+
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("LA CHIAMATA NON È ANDATA A BUON FINE!");
+          }
+        })
+        .then((data) => {
+          if (data.Response === "True" && data.Search) {
+            // Mostra solo i movie con img.
+            const movieWithPoster = data.Search.filter(
+              (movie) => movie.Poster && movie.Poster !== "N/A"
+            );
+            allMovies.push(...movieWithPoster);
+          }
         });
+    };
+
+    const promises = [];
+    for (let i = 1; i <= MAX_PAGES; i++) {
+      promises.push(fetchPage(i));
+    }
+
+    Promise.all(promises)
+      .then(() => {
+        const unique = Array.from(
+          new Map(allMovies.map((m) => [m.imdbID, m])).values()
+        );
+        this.setState({ mymovies: unique, isLoading: false });
       })
       .catch((error) => {
         console.log("ERRORE NEL RECUPERO DATI", error);
@@ -47,10 +75,19 @@ class MovieSection extends Component {
     }));
   };
 
+  handlePosterError = (imdbID) => {
+    this.setState((s) => ({
+      mymovies: s.mymovies.filter((m) => m.imdbID !== imdbID),
+    }));
+  };
+
   render() {
-    console.log("Render invocato");
+    // console.log("Render invocato");
 
     const { mymovies, isLoading, isError, movieSelected } = this.state;
+
+    // pag. da 6
+    const pages = reduceArray(mymovies, PAGE_SIZE);
 
     return (
       <Container className="my-5">
@@ -59,33 +96,51 @@ class MovieSection extends Component {
             <h4 className="text-light">{this.props.saga}</h4>
           </Col>
         </Row>
-        <Row>
-          {isLoading && (
+
+        {isLoading && (
+          <Row>
             <Col className="d-flex justify-content-center">
               <Spinner animation="border" variant="secondary" />
             </Col>
-          )}
-          {isError && (
+          </Row>
+        )}
+        {isError && (
+          <Row>
             <Col className="d-flex justify-content-center">
               <Alert variant="danger">Errore nel recupero dei film!</Alert>
             </Col>
-          )}
-          {!isLoading && !isError && mymovies.length > 0 &&
-            mymovies.map((movie) => (
-              <Col xs={12} sm={6} md={4} lg={2} key={movie.imdbID} className="mb-4">
-                <SingleMovie
-                  movie={movie}
-                  isSelected={movieSelected === movie.imdbID}
-                  onMovieSelect={this.toggleMovieDetails}
-                />
-              </Col>
+          </Row>
+        )}
+        {!isLoading && !isError && mymovies.length > 0 && (
+          <Carousel interval={null} indicators={false} variant="dark">
+            {pages.map((page, idx) => (
+              <Carousel.Item key={`slide-${idx}`}>
+                <Row>
+                  {page.map((movie) => (
+                    <Col
+                      xs={12}
+                      sm={6}
+                      md={4}
+                      lg={2}
+                      key={movie.imdbID}
+                      className="mb-4"
+                    >
+                      <SingleMovie
+                        movie={movie}
+                        isSelected={movieSelected === movie.imdbID}
+                        onMovieSelect={this.toggleMovieDetails}
+                        onPosterError={this.handlePosterError}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+              </Carousel.Item>
             ))}
-        </Row>
-   
+          </Carousel>
+        )}
       </Container>
     );
   }
 }
 
 export default MovieSection;
-

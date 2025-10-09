@@ -16,8 +16,9 @@ class SingleMovie extends Component {
         <Card.Img
           variant="top"
           className="h-100"
-          src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/300x450?text=No+Image"} //per i film che non hanno il poster
+          src={movie.Poster } //per i film che non hanno il poster
           alt={movie.Title}
+          onError={() => this.props.onPosterError && this.props.onPosterError(movie.imdbID)}
         />
         {isSelected && (
           <Card.Body className="p-2"
