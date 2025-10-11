@@ -1,7 +1,26 @@
-import { Navbar, Container, Nav } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
+import {
+  Navbar,
+  Container,
+  Nav,
+  Form,
+  Button,
+  FormControl,
+} from "react-bootstrap";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const CustomNavbar = function () {
+  const [term, setTerm] = useState("");
+  const navigate = useNavigate();
+
+  const onSubmit = (e) => {
+    e.preventDefault(); // impedisce che il browser ricarichi la pagina perdendo lo stato di React
+    const q = term.trim();
+    if (!q) return;
+    navigate(`/search?q=${encodeURIComponent(q)}`);
+    // encodeURIComponent -> assicura che spazi e caratteri speciali siano validi nell’URL
+    setTerm(""); // svuoto il campo
+  };
   return (
     <Navbar collapseOnSelect expand="md" bg="black" data-bs-theme="dark">
       <Container fluid>
@@ -18,22 +37,44 @@ const CustomNavbar = function () {
             <Nav.Link as={NavLink} to="/" end className="active">
               Home
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/tvshows">TV Shows</Nav.Link>
-            <Nav.Link as={NavLink} to="/movies">Movies</Nav.Link>
-            <Nav.Link as={NavLink} to="/recently">Recently Added</Nav.Link>
-            <Nav.Link as={NavLink} to="/mylist">My List</Nav.Link>
-            </Nav>
-          <Nav className="ms-auto">
-            <Nav.Link as={NavLink} to="/search" className="active">
-              <i className="bi bi-search"></i>
+            <Nav.Link as={NavLink} to="/tvshows">
+              TV Shows
             </Nav.Link>
+            <Nav.Link as={NavLink} to="/movies">
+              Movies
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/recently">
+              Recently Added
+            </Nav.Link>
+            <Nav.Link as={NavLink} to="/mylist">
+              My List
+            </Nav.Link>
+          </Nav>
+          <Nav className="ms-auto">
+            <Form className="d-flex" onSubmit={onSubmit}>
+              <FormControl
+                type="search"
+                placeholder="Search movies..."
+                className="me-2 search_form"
+                value={term}
+                onChange={(e) => setTerm(e.target.value)}
+              />
+              <Button
+                type="submit"
+                variant="outline-light"
+                style={{ border: "none" }}
+                className="search_btn"
+              >
+                <i className="bi bi-search" />
+              </Button>
+            </Form>
             <Nav.Link as={NavLink} to="/kids" className="active">
               KIDS
             </Nav.Link>
             <Nav.Link as={NavLink} to="/bill" className="active">
               <i className="bi bi-bell-fill"></i>
             </Nav.Link>
-              <Nav.Link as={NavLink} to="/settings" className="active">
+            <Nav.Link as={NavLink} to="/settings" className="active">
               <i className="bi bi-gear"></i>
             </Nav.Link>
             <Nav.Link as={NavLink} to="/profile" className="active">

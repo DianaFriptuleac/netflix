@@ -6,10 +6,28 @@ const API_KEY = process.env.REACT_APP_OMDB_API_KEY;
 const PAGE_SIZE = 6;
 
 const reduceArray = (arr, size) =>
+  //arr → array da dividere in gruppi
+  //size → numero max. di elementi per gruppo
   arr.reduce(
-    (acc, _, i) => (i % size ? acc : [...acc, arr.slice(i, i + size)]),
-    []
+    // reduce() -> trasforma l'arrau in un altro
+    (acc, _, i) =>
+      //acc → accumulatore (array di gruppi costruito finora)
+      //_ → valore corrente
+      //i → indice elemento corrente
+
+      //Se i NON è multiplo di size (es. 1,2,4,5,…)
+      // restituisce l’accumulatore così com’è, senza aggiungere nulla
+      // Altrimenti (i % size === 0), aggiunge un nuovo gruppo
+      i % size
+        ? acc // non fa nulla
+        : [...acc, arr.slice(i, i + size)], // → aggiungi un nuovo “pezzo” di array da i a i+size
+    [] // valore iniziale accumulatore,  []
   );
+
+//Ex di reduceArray:
+//  const result = reduceArray([1,2,3,4,5,6,7], 3);
+//console.log(result);
+// Risultato -> [[1,2,3], [4,5,6], [7]]
 
 class MovieSection extends Component {
   state = {
@@ -22,14 +40,25 @@ class MovieSection extends Component {
   componentDidMount() {
     this.fetchAllMovies();
   }
+  componentDidUpdate(prevProps) {
+    if (prevProps.saga !== this.props.saga) {
+      this.setState(
+        { isLoading: true, isError: false, mymovies: [], movieSelected: null },
+        this.fetchAllMovies
+      );
+    }
+  }
 
   fetchAllMovies = () => {
     const MAX_PAGES = 3;
     const allMovies = [];
 
     const fetchPage = (page) => {
-      return fetch(`https://www.omdbapi.com/?s=${encodeURIComponent(this.props.saga)}&page=${page}&apikey=${API_KEY}`)
-
+      return fetch(
+        `https://www.omdbapi.com/?s=${encodeURIComponent(
+          this.props.saga
+        )}&page=${page}&apikey=${API_KEY}`
+      )
         .then((response) => {
           if (response.ok) {
             return response.json();
@@ -90,7 +119,7 @@ class MovieSection extends Component {
     const pages = reduceArray(mymovies, PAGE_SIZE);
 
     return (
-      <Container className="my-5">
+      <Container className="mb-3">
         <Row className="mb-3">
           <Col>
             <h4 className="text-light">{this.props.saga}</h4>
@@ -112,31 +141,59 @@ class MovieSection extends Component {
           </Row>
         )}
         {!isLoading && !isError && mymovies.length > 0 && (
-          <Carousel interval={null} indicators={false} variant="dark">
-            {pages.map((page, idx) => (
-              <Carousel.Item key={`slide-${idx}`}>
-                <Row>
-                  {page.map((movie) => (
-                    <Col
-                      xs={12}
-                      sm={6}
-                      md={4}
-                      lg={2}
-                      key={movie.imdbID}
-                      className="mb-4"
-                    >
-                      <SingleMovie
-                        movie={movie}
-                        isSelected={movieSelected === movie.imdbID}
-                        onMovieSelect={this.toggleMovieDetails}
-                        onPosterError={this.handlePosterError}
-                      />
-                    </Col>
-                  ))}
-                </Row>
-              </Carousel.Item>
-            ))}
-          </Carousel>
+          <>
+            {this.props.noCarousel ? (
+              <Row>
+                {mymovies.map((movie) => (
+                  <Col
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={2}
+                    key={movie.imdbID}
+                    className="mb-4"
+                  >
+                    <SingleMovie
+                      movie={movie}
+                      isSelected={movieSelected === movie.imdbID}
+                      onMovieSelect={this.toggleMovieDetails}
+                      onPosterError={this.handlePosterError}
+                    />
+                  </Col>
+                ))}
+              </Row>
+            ) : (
+              <Carousel
+                interval={null}
+                indicators={false}
+                className="custom-carousel"
+              >
+                {pages.map((page, idx) => (
+                  <Carousel.Item key={`slide-${idx}`}>
+                    <Row>
+                      {page.map((movie) => (
+                        <Col
+                          xs={12}
+                          sm={6}
+                          md={4}
+                          lg={2}
+                          key={movie.imdbID}
+                          className="mb-4"
+                        >
+                          <SingleMovie
+                            movie={movie}
+                            isSelected={movieSelected === movie.imdbID}
+                            onMovieSelect={this.toggleMovieDetails}
+                            onPosterError={this.handlePosterError}
+                          />
+                        </Col>
+                      ))}
+                    </Row>
+                  </Carousel.Item>
+                ))}
+              </Carousel>
+            )}
+          </>
         )}
       </Container>
     );

@@ -7,6 +7,7 @@ const Home = function () {
       <MovieSection saga="Harry Potter" />
       <MovieSection saga="Lord of the Rings" />
       <MovieSection saga="Star Wars" />
+      <MovieSection saga="Jurassic World" />
       <MovieSection saga="Lupin" />
       <MovieSection saga="Christmas" />
     </div>
